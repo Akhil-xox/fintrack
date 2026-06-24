@@ -7,7 +7,10 @@ function formatCurrency(amount) {
 }
 
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+  const [year, month, day] = dateStr.split('-')
+  return new Date(year, month - 1, day).toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric'
+  })
 }
 
 export default function TransactionList() {
