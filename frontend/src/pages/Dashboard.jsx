@@ -1,21 +1,21 @@
-import { supabase } from '../lib/supabase'
+import Navbar from '../components/Navbar'
+import TransactionList from '../components/TransactionList'
+import BudgetForm from '../components/BudgetForm'
 
 export default function Dashboard({ session }) {
-  async function handleLogout() {
-    await supabase.auth.signOut()
-  }
-
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">FinTrack</h1>
-        <button onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-gray-800">
-          Sign out
-        </button>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar email={session.user.email} />
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <TransactionList />
+          </div>
+          <div>
+            <BudgetForm />
+          </div>
+        </div>
       </div>
-      <p className="text-gray-600">Logged in as <strong>{session.user.email}</strong></p>
-      <p className="text-gray-400 mt-2">Dashboard coming tomorrow.</p>
     </div>
   )
 }
