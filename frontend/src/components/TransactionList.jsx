@@ -7,6 +7,7 @@ function formatCurrency(amount) {
 }
 
 function formatDate(dateStr) {
+  if (!dateStr) return 'No date'
   const [year, month, day] = dateStr.split('-')
   return new Date(year, month - 1, day).toLocaleDateString('en-IN', {
     day: 'numeric', month: 'short', year: 'numeric'
@@ -43,7 +44,7 @@ export default function TransactionList() {
               <div className={`w-2 h-2 rounded-full ${tx.type === 'income' ? 'bg-green-400' : 'bg-red-400'}`} />
               <div>
                 <p className="text-sm font-medium text-gray-800">{tx.description || tx.category}</p>
-                <p className="text-xs text-gray-400">{tx.category} · {formatDate(tx.transaction_date)}</p>
+                <p className="text-xs text-gray-400">{tx.category} · {formatDate(tx.date)}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">

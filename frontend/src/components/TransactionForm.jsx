@@ -21,7 +21,7 @@ export default function TransactionForm({ editingTransaction, onClose }) {
         amount: editingTransaction.amount,
         type: editingTransaction.type,
         category: editingTransaction.category,
-        transaction_date: editingTransaction.transaction_date,
+        transaction_date: editingTransaction.date,
         description: editingTransaction.description || ''
       })
     }
