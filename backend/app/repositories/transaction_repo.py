@@ -63,3 +63,41 @@ def delete(db: Session, transaction_id: UUID, user_id: str):
     db.commit()
     return result.mappings().first()
 
+def is_duplicate(db: Session, user_id: str, amount: float, date: str, description: str) -> bool:
+    result = db.execute(
+        text("""
+            SELECT 1 FROM transactions
+            WHERE user_id = :uid
+              AND amount = :amount
+              AND date = :date
+              AND description = :description
+            LIMIT 1
+        """),
+        {"uid": user_id, "amount": amount, "date": date, "description": description}
+    )
+    return result.first() is not None
+
+def bulk_create(db: Session, transactions: list[dict], user_id: str) -> dict:
+    inserted = 0
+    skipped  = 0
+    for tx in transactions:
+        if is_duplicate(db, user_id, tx["amount"], tx["date"], tx["description"]):
+            skipped += 1
+            continue
+        db.execute(
+            text("""
+                INSERT INTO transactions (user_id, amount, type, category, date, description, source)
+                VALUES (:uid, :amount, :type, :category, :date, :desc, 'import')
+            """),
+            {
+                "uid":      user_id,
+                "amount":   tx["amount"],
+                "type":     tx["type"],
+                "category": tx["category"],
+                "date":     tx["date"],
+                "desc":     tx["description"],
+            }
+        )
+        inserted += 1
+    db.commit()
+    return {"inserted": inserted, "skipped": skipped}
