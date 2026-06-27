@@ -62,3 +62,4 @@ def delete(db: Session, transaction_id: UUID, user_id: str):
     )
     db.commit()
     return result.mappings().first()
+
