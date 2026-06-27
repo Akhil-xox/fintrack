@@ -20,3 +20,5 @@ app.include_router(csv_import.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+# ok
