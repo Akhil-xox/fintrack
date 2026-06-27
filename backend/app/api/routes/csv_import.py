@@ -13,7 +13,7 @@ async def preview_import(
     db: Session = Depends(get_db),
     user_id: str = Depends(get_current_user)
 ):
-    if not file.filename.endswith(".csv"):
+    if not file.filename or not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Only CSV files are supported")
 
     contents = await file.read()
