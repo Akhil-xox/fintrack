@@ -14,12 +14,18 @@ export default function MonthSelector({ month, year, onChange }) {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <button onClick={prev} className="text-gray-400 hover:text-gray-600 text-lg">‹</button>
-      <span className="text-sm font-medium text-gray-700 w-24 text-center">
+    <div className="flex items-center gap-2">
+      <button onClick={prev}
+        className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-100 transition-colors">
+        ‹
+      </button>
+      <span className="text-sm font-semibold text-gray-200 w-24 text-center">
         {MONTHS[month - 1]} {year}
       </span>
-      <button onClick={next} className="text-gray-400 hover:text-gray-600 text-lg">›</button>
+      <button onClick={next}
+        className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-100 transition-colors">
+        ›
+      </button>
     </div>
   )
 }
