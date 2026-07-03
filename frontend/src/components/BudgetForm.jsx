@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useBudgets, useUpsertBudget } from '../hooks/useBudgets'
+import { formatCurrency } from '../lib/utils'
 
 const CATEGORIES = ['Food', 'Transport', 'Housing', 'Utilities', 'Entertainment', 'Health', 'Shopping', 'Other']
 
@@ -19,39 +20,37 @@ export default function BudgetForm() {
     setAmount('')
   }
 
+  const inputClass = "bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-amber-500 transition-colors"
+
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        Budgets — {now.toLocaleString('default', { month: 'long' })} {year}
-      </h2>
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">Set Budget</h3>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
-        <select value={category} onChange={e => setCategory(e.target.value)}
-          className="border rounded px-3 py-2 text-sm flex-1">
-          {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <select value={category} onChange={e => setCategory(e.target.value)} className={`w-full ${inputClass}`}>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <input type="number" placeholder="Amount" value={amount}
-          onChange={e => setAmount(e.target.value)} min="1" required
-          className="border rounded px-3 py-2 text-sm w-32" />
-        <button type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700">
-          Set
-        </button>
+        <div className="flex gap-2">
+          <input type="number" placeholder="Amount" value={amount}
+            onChange={e => setAmount(e.target.value)} min="1" required
+            className={`flex-1 ${inputClass} font-mono`} />
+          <button type="submit"
+            className="bg-amber-500 hover:bg-amber-400 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+            Set
+          </button>
+        </div>
       </form>
 
-      <div className="space-y-2">
-        {budgets?.map(b => (
-          <div key={b.id} className="bg-white border border-gray-100 rounded-lg px-4 py-3 flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700">{b.category}</span>
-            <span className="text-sm text-gray-500">
-              ₹{b.amount.toLocaleString('en-IN')}
-            </span>
-          </div>
-        ))}
-        {budgets?.length === 0 && (
-          <p className="text-gray-400 text-sm text-center py-4">No budgets set for this month.</p>
-        )}
-      </div>
+      {budgets?.length > 0 && (
+        <div className="mt-4 space-y-1 border-t border-gray-800 pt-4">
+          {budgets.map(b => (
+            <div key={b.id} className="flex justify-between py-1">
+              <span className="text-sm text-gray-400">{b.category}</span>
+              <span className="text-sm font-mono tabular-nums text-gray-300">{formatCurrency(b.amount)}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
