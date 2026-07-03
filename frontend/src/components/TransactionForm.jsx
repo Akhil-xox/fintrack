@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react'
 import { useCreateTransaction, useUpdateTransaction } from '../hooks/useTransactions'
 
 const CATEGORIES = ['Food', 'Transport', 'Housing', 'Utilities', 'Entertainment', 'Health', 'Shopping', 'Salary', 'Other']
+const inputClass = "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 focus:outline-none focus:border-amber-500 transition-colors"
 
 export default function TransactionForm({ editingTransaction, onClose }) {
   const [form, setForm] = useState({
-    amount: '',
-    type: 'expense',
-    category: 'Food',
-    transaction_date: new Date().toISOString().split('T')[0],
-    description: ''
+    amount: '', type: 'expense', category: 'Food',
+    transaction_date: new Date().toISOString().split('T')[0], description: ''
   })
 
   const createTransaction = useCreateTransaction()
@@ -27,14 +25,9 @@ export default function TransactionForm({ editingTransaction, onClose }) {
     }
   }, [editingTransaction])
 
-  function handleChange(e) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
   async function handleSubmit(e) {
     e.preventDefault()
     const payload = { ...form, amount: parseFloat(form.amount) }
-
     if (editingTransaction) {
       await updateTransaction.mutateAsync({ id: editingTransaction.id, data: payload })
     } else {
@@ -46,49 +39,73 @@ export default function TransactionForm({ editingTransaction, onClose }) {
   const isLoading = createTransaction.isPending || updateTransaction.isPending
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md">
+        <h2 className="text-base font-semibold text-gray-100 mb-5">
           {editingTransaction ? 'Edit Transaction' : 'Add Transaction'}
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex gap-3">
-            <button type="button"
-              onClick={() => setForm(p => ({ ...p, type: 'expense' }))}
-              className={`flex-1 py-2 rounded text-sm font-medium border ${form.type === 'expense' ? 'bg-red-50 border-red-400 text-red-700' : 'border-gray-200 text-gray-500'}`}>
+          {/* Type toggle */}
+          <div className="grid grid-cols-2 gap-2 p-1 bg-gray-800 rounded-xl">
+            <button type="button" onClick={() => setForm(p => ({ ...p, type: 'expense' }))}
+              className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                form.type === 'expense'
+                  ? 'bg-rose-500/20 text-rose-400 ring-1 ring-rose-500/30'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}>
               Expense
             </button>
-            <button type="button"
-              onClick={() => setForm(p => ({ ...p, type: 'income' }))}
-              className={`flex-1 py-2 rounded text-sm font-medium border ${form.type === 'income' ? 'bg-green-50 border-green-400 text-green-700' : 'border-gray-200 text-gray-500'}`}>
+            <button type="button" onClick={() => setForm(p => ({ ...p, type: 'income' }))}
+              className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                form.type === 'income'
+                  ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}>
               Income
             </button>
           </div>
 
-          <input type="number" name="amount" placeholder="Amount" value={form.amount}
-            onChange={handleChange} step="0.01" min="0.01" required
-            className="w-full border rounded px-3 py-2 text-sm" />
+          <div>
+            <label className="text-xs text-gray-400 font-medium block mb-1.5">Amount</label>
+            <input type="number" name="amount" placeholder="0" value={form.amount}
+              onChange={e => setForm(p => ({ ...p, amount: e.target.value }))}
+              step="0.01" min="0.01" required className={`${inputClass} font-mono`} />
+          </div>
 
-          <select name="category" value={form.category} onChange={handleChange}
-            className="w-full border rounded px-3 py-2 text-sm">
-            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-          </select>
+          <div>
+            <label className="text-xs text-gray-400 font-medium block mb-1.5">Category</label>
+            <select name="category" value={form.category}
+              onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
+              className={inputClass}>
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
 
-          <input type="date" name="transaction_date" value={form.transaction_date}
-            onChange={handleChange} required
-            className="w-full border rounded px-3 py-2 text-sm" />
+          <div>
+            <label className="text-xs text-gray-400 font-medium block mb-1.5">Date</label>
+            <input type="date" name="transaction_date" value={form.transaction_date}
+              onChange={e => setForm(p => ({ ...p, transaction_date: e.target.value }))}
+              required className={inputClass} />
+          </div>
 
-          <input type="text" name="description" placeholder="Description (optional)"
-            value={form.description} onChange={handleChange}
-            className="w-full border rounded px-3 py-2 text-sm" />
+          <div>
+            <label className="text-xs text-gray-400 font-medium block mb-1.5">
+              Description <span className="text-gray-600">(optional)</span>
+            </label>
+            <input type="text" placeholder="e.g. Lunch at restaurant"
+              value={form.description}
+              onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+              className={inputClass} />
+          </div>
 
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose}
-              className="flex-1 py-2 border rounded text-sm text-gray-600 hover:bg-gray-50">
+              className="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm text-gray-300 font-medium transition-colors">
               Cancel
             </button>
             <button type="submit" disabled={isLoading}
-              className="flex-1 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50">
+              className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-400 text-gray-900 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50">
               {isLoading ? 'Saving...' : editingTransaction ? 'Update' : 'Add'}
             </button>
           </div>
