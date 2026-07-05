@@ -27,3 +27,5 @@ app.include_router(csv_import.router)
 def health(db: Session = Depends(get_db)):
     db.execute(text("SELECT 1"))
     return {"status": "ok"}
+
+# 
