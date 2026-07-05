@@ -1,3 +1,5 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
 export default function MonthSelector({ month, year, onChange }) {
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
@@ -16,15 +18,15 @@ export default function MonthSelector({ month, year, onChange }) {
   return (
     <div className="flex items-center gap-2">
       <button onClick={prev}
-        className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-100 transition-colors">
-        ‹
+        className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors">
+        <ChevronLeft size={16} />
       </button>
-      <span className="text-sm font-semibold text-gray-200 w-24 text-center">
+      <span className="text-sm font-semibold text-gray-700 w-24 text-center">
         {MONTHS[month - 1]} {year}
       </span>
       <button onClick={next}
-        className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-100 transition-colors">
-        ›
+        className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors">
+        <ChevronRight size={16} />
       </button>
     </div>
   )
