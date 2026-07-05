@@ -23,7 +23,7 @@ app.include_router(budgets.router)
 app.include_router(analytics.router)
 app.include_router(csv_import.router)
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health(db: Session = Depends(get_db)):
     db.execute(text("SELECT 1"))
     return {"status": "ok"}
