@@ -74,6 +74,3 @@ VITE_API_URL=http://localhost:8000
 
 Two core tables (`transactions`, `budgets`) plus Supabase's built-in `auth.users`, with Row Level Security enforcing `user_id = auth.uid()` on every table.
 
-## Author
-
-Built by Akhil — SRMIST KTR
