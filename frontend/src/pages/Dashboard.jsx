@@ -41,7 +41,7 @@ export default function Dashboard({ session }) {
               <BudgetBars month={month} year={year} />
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-              <BudgetForm />
+              <BudgetForm month={month} year={year} />
             </div>
           </div>
         </div>

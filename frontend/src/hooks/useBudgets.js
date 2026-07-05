@@ -18,3 +18,11 @@ export function useUpsertBudget() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['budgets'] })
   })
 }
+
+export function useDeleteBudget() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id) => api.delete(`/budgets/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['budgets'] })
+  })
+}
