@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useBudgets, useUpsertBudget, useDeleteBudget } from '../hooks/useBudgets'
 import { formatCurrency } from '../lib/utils'
 
@@ -7,13 +8,13 @@ const CATEGORIES = ['Food', 'Transport', 'Housing', 'Utilities', 'Entertainment'
 export default function BudgetForm({ month, year }) {
   const [category, setCategory] = useState('Food')
   const [amount, setAmount] = useState('')
-  const [copyTarget, setCopyTarget] = useState('next') // 'next' | 'prev'
+  const [copyTarget, setCopyTarget] = useState('next')
 
   const { data: budgets } = useBudgets(month, year)
   const upsertBudget = useUpsertBudget()
   const deleteBudget = useDeleteBudget()
 
-  const inputClass = "bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 focus:outline-none focus:border-amber-500 transition-colors"
+  const inputClass = "bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition-colors"
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -43,7 +44,7 @@ export default function BudgetForm({ month, year }) {
 
   return (
     <div>
-      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">Set Budget</h3>
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Set Budget</h3>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <select value={category} onChange={e => setCategory(e.target.value)} className={`w-full ${inputClass}`}>
@@ -54,7 +55,7 @@ export default function BudgetForm({ month, year }) {
             onChange={e => setAmount(e.target.value)} min="1" required
             className={`flex-1 ${inputClass} font-mono`} />
           <button type="submit"
-            className="bg-amber-500 hover:bg-amber-400 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
             {budgets?.some(b => b.category === category) ? 'Update' : 'Set'}
           </button>
         </div>
@@ -62,25 +63,29 @@ export default function BudgetForm({ month, year }) {
 
       {budgets?.length > 0 && (
         <>
-          <div className="mt-4 space-y-1 border-t border-gray-800 pt-4">
+          <div className="mt-4 space-y-1 border-t border-gray-100 pt-4">
             {budgets.map(b => (
               <div key={b.id} className="flex justify-between items-center py-1 group">
-                <span className="text-sm text-gray-400">{b.category}</span>
+                <span className="text-sm text-gray-500">{b.category}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono tabular-nums text-gray-300">{formatCurrency(b.amount)}</span>
-                  <div className="hidden group-hover:flex items-center gap-2">
+                  <span className="text-sm font-mono tabular-nums text-gray-700">{formatCurrency(b.amount)}</span>
+                  <div className="hidden group-hover:flex items-center gap-1">
                     <button onClick={() => handleEdit(b)}
-                      className="text-xs text-gray-500 hover:text-amber-400 transition-colors">Edit</button>
+                      className="p-1 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
+                      <Pencil size={13} />
+                    </button>
                     <button onClick={() => deleteBudget.mutate(b.id)}
-                      className="text-xs text-gray-500 hover:text-rose-400 transition-colors">Delete</button>
+                      className="p-1 rounded-lg text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-colors">
+                      <Trash2 size={13} />
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-gray-800">
-            <p className="text-xs text-gray-500 mb-2">Copy these budgets to</p>
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <p className="text-xs text-gray-400 mb-2">Copy these budgets to</p>
             <div className="flex gap-2">
               <select value={copyTarget} onChange={e => setCopyTarget(e.target.value)}
                 className={`flex-1 ${inputClass}`}>
@@ -88,7 +93,7 @@ export default function BudgetForm({ month, year }) {
                 <option value="next">Next month</option>
               </select>
               <button onClick={handleCopy}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                className="bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 px-4 py-2 rounded-xl text-sm font-medium transition-colors">
                 Copy
               </button>
             </div>
