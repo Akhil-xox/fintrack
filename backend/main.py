@@ -11,7 +11,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://fintrack-akhil.vercel.app",
+        "https://fintrack-nine-green.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
